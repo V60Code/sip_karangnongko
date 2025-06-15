@@ -3,43 +3,76 @@
 namespace App\Filament\Resources\GoatResource\Pages;
 
 use App\Filament\Resources\GoatResource;
-use App\Models\Goat;
+use Filament\Actions; // Bisa dihapus jika tidak ada Actions::make() yang digunakan di sini
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\AuthenticationException; // Untuk melempar exception jika tidak terautentikasi
+
 
 class CreateGoat extends CreateRecord
 {
     protected static string $resource = GoatResource::class;
 
+    /**
+     * Mengarahkan pengguna kembali ke halaman index setelah berhasil membuat record.
+     *
+     * @return string
+     */
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    /**
+     * Memodifikasi data form sebelum record dibuat.
+     * Di sini kita akan mengisi user_id dan memastikan farm_id terisi jika memungkinkan.
+     *
+     * @param array $data Data dari form.
+     * @return array Data yang sudah dimodifikasi.
+     * @throws AuthenticationException Jika user tidak terautentikasi.
+     */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // Tentukan farm_id berdasarkan role user (non-admin)
-        if (Auth::user()->role !== 'admin') {
-            $data['farm_id'] = Auth::user()->farm_id;
+        $user = Auth::user();
+
+        if (!$user) {
+            // Ini seharusnya sudah ditangani oleh middleware autentikasi Filament,
+            // tetapi sebagai lapisan keamanan tambahan, kita lempar exception.
+            throw new AuthenticationException(
+                'Unauthenticated during goat creation attempt.'
+            );
         }
 
-        // Inisialisasi prefix berdasarkan nama kandang
-        $farmCode = match ($data['farm_id']) {
-            1 => 'KB', // Kandang Barat (misal id = 1)
-            2 => 'KT', // Kandang Timur (misal id = 2)
-            default => 'XX',
-        };
+        // Set user_id dari pengguna yang sedang login
+        $data['user_id'] = $user->id;
 
-        // Ambil nomor urut terakhir dari tag_number dengan prefix yang sama
-        $lastGoat = Goat::where('farm_id', $data['farm_id'])
-            ->where('tag_number', 'like', "{$farmCode}%")
-            ->orderByDesc('tag_number')
-            ->first();
-
-        $lastNumber = 0;
-
-        if ($lastGoat && preg_match('/\d+$/', $lastGoat->tag_number, $matches)) {
-            $lastNumber = (int)$matches[0];
+        // Logika untuk mengisi farm_id, yang akan digunakan untuk prefix tag_number di model Goat
+        // Jika farm_id sudah diisi dari form (misalnya oleh Admin), kita tidak menimpanya.
+        if (!isset($data['farm_id'])) {
+            // Jika pengguna yang login bukan admin dan memiliki farm_id,
+            // maka set farm_id kambing sesuai dengan farm_id pengguna tersebut.
+            if (isset($user->role) && $user->role !== 'admin' && isset($user->farm_id)) {
+                $data['farm_id'] = $user->farm_id;
+            }
+            // Jika pengguna adalah admin, dan farm_id tidak diisi dari form,
+            // farm_id akan tetap null. Logika di model Goat (generateUniqueTagNumber)
+            // akan menggunakan prefix default seperti 'KG' jika farm_id null.
+            // Anda bisa menambahkan logika di sini jika ingin farm_id wajib diisi
+            // atau memiliki default tertentu bahkan untuk admin yang tidak memilih.
         }
-
-        $nextNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
-        $data['tag_number'] = $farmCode . $nextNumber;
+        // Kolom 'tag_number' tidak perlu di-set di sini karena akan digenerate
+        // secara otomatis oleh event 'creating' di model Goat.
 
         return $data;
+    }
+
+    /**
+     * Pesan notifikasi setelah record berhasil dibuat.
+     *
+     * @return string|null
+     */
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Data Kambing berhasil ditambahkan';
     }
 }

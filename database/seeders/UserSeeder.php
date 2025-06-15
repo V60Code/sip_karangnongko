@@ -12,41 +12,95 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Tambahkan dua farm dulu
-        $farmBarat = Farm::create([
-            'name' => 'Barat',
-            'location' => 'Kandang Barat'
-        ]);
+        // Gunakan firstOrCreate untuk menghindari duplikasi jika seeder dijalankan berkali-kali
+        $farmBarat = Farm::firstOrCreate(
+            ['name' => 'Barat'],
+            ['location' => 'Kandang Barat']
+        );
 
-        $farmTimur = Farm::create([
-            'name' => 'Timur',
-            'location' => 'Kandang Timur'
-        ]);
+        $farmTimur = Farm::firstOrCreate(
+            ['name' => 'Timur'],
+            ['location' => 'Kandang Timur']
+        );
 
         // Admin
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@karangnongko.id',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'farm_id' => null,
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@karangnongko.id'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'), // Ganti dengan password yang kuat
+                'role' => 'admin',
+                'farm_id' => null,
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // Peternak Barat
-        User::create([
-            'name' => 'barat',
-            'email' => 'barat@karangnongko.id',
-            'password' => Hash::make('password'),
-            'role' => 'barat',
-            'farm_id' => $farmBarat->id,
-        ]);
+        // Peternak Barat (Contoh Awal)
+        User::firstOrCreate(
+            ['email' => 'barat@karangnongko.id'],
+            [
+                'name' => 'barat', // Nama user contoh
+                'password' => Hash::make('password'), // Ganti dengan password yang kuat
+                'role' => 'barat',
+                'farm_id' => $farmBarat->id,
+                'email_verified_at' => now(),
+            ]
+        );
 
-        // Peternak Timur
-        User::create([
-            'name' => 'timur',
-            'email' => 'timur@karangnongko.id',
-            'password' => Hash::make('password'),
-            'role' => 'timur',
-            'farm_id' => $farmTimur->id,
-        ]);
+        // Peternak Timur (Contoh Awal)
+        User::firstOrCreate(
+            ['email' => 'timur@karangnongko.id'],
+            [
+                'name' => 'timur', // Nama user contoh
+                'password' => Hash::make('password'), // Ganti dengan password yang kuat
+                'role' => 'timur',
+                'farm_id' => $farmTimur->id,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // --- Tambahan Pengguna Baru ---
+
+        // Pengguna untuk Role Barat
+        $newBaratUsers = [
+            ['name' => 'samsuhadi'],
+            ['name' => 'sigit'],
+            ['name' => 'suwarno'],
+            ['name' => 'suranto'],
+            ['name' => 'dwi'],
+            ['name' => 'susanto'],
+            ['name' => 'sajadi'],
+        ];
+
+        foreach ($newBaratUsers as $userData) {
+            User::firstOrCreate(
+                ['email' => strtolower($userData['name']) . '@karangnongko.id'],
+                [
+                    'name' => $userData['name'],
+                    'password' => Hash::make('peternakjaya'),
+                    'role' => 'barat',
+                    'farm_id' => $farmBarat->id,
+                    'email_verified_at' => now(),
+                ]
+            );
+        }
+
+        // Pengguna untuk Role Timur
+        $newTimurUsers = [
+            ['name' => 'suliman'],
+        ];
+
+        foreach ($newTimurUsers as $userData) {
+            User::firstOrCreate(
+                ['email' => strtolower($userData['name']) . '@karangnongko.id'],
+                [
+                    'name' => $userData['name'],
+                    'password' => Hash::make('peternakjaya'),
+                    'role' => 'timur',
+                    'farm_id' => $farmTimur->id,
+                    'email_verified_at' => now(),
+                ]
+            );
+        }
     }
 }

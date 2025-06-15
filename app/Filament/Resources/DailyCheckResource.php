@@ -75,7 +75,6 @@ class DailyCheckResource extends Resource
             ->columns([
                 TextColumn::make('check_date')->label('Tanggal Cek')->date()->sortable(),
                 TextColumn::make('user.name')->label('Dicek Oleh')->searchable()->sortable(),
-                // TextColumn::make('goats_count')->counts('goats')->label('Jml Kambing Dicek')->sortable(),
                 TextColumn::make('notes')->label('Catatan')->limit(50)->searchable()->toggleable(),
                 TextColumn::make('created_at')->label('Dibuat')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -91,7 +90,7 @@ class DailyCheckResource extends Resource
                 DeleteBulkAction::make(),
             ])
             ->defaultPaginationPageOption(25)
-            ->poll('30s')
+            ->poll('60s') // Reduced polling frequency from 30s to 60s
             ->deferLoading();
     }
 

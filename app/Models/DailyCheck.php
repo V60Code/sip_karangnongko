@@ -24,10 +24,11 @@ class DailyCheck extends Model
 
     /**
      * The relationships that should always be loaded.
+     * Removed automatic eager loading to improve performance
      *
      * @var array
      */
-    protected $with = ['user'];
+    // protected $with = ['user'];
 
     /**
      * The number of models to return for pagination.

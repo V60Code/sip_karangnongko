@@ -6,6 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +25,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (app()->environment('production') || request()->isSecure()) {
+            URL::forceScheme('https');
+            
+            // Configure Livewire for HTTPS
+            Livewire::setScriptRoute(function ($handle) {
+                return Route::get('/livewire/livewire.js', $handle);
+            });
+            
+            // Force HTTPS for assets
+            URL::forceRootUrl(config('app.url'));
+        }
+        
         // Optimasi untuk production
         if (app()->environment('production')) {
             // Disable lazy loading untuk mencegah N+1 queries

@@ -4,6 +4,11 @@
     </IfModule>
 
     RewriteEngine On
+    
+    # Force HTTPS redirect
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -12,6 +17,25 @@
     # Handle X-XSRF-Token Header
     RewriteCond %{HTTP:x-xsrf-token} .
     RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Handle CSRF Token
+    RewriteCond %{HTTP:X-CSRF-TOKEN} .
+    RewriteRule .* - [E=HTTP_X_CSRF_TOKEN:%{HTTP:X-CSRF-TOKEN}]
+
+    # Serve static assets directly (JS, CSS, images, etc.)
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_URI} \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ [NC]
+    RewriteRule .* - [L]
+    
+    # Allow vendor assets (including Livewire)
+    RewriteCond %{REQUEST_URI} ^/vendor/
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule .* - [L]
+
+    # Allow POST method for Livewire
+    RewriteCond %{REQUEST_METHOD} ^POST$
+    RewriteCond %{REQUEST_URI} ^/livewire/
+    RewriteRule .* - [L]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -23,3 +47,13 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Allow all HTTP methods including POST
+<Limit GET POST PUT DELETE PATCH OPTIONS HEAD>
+    Require all granted
+</Limit>
+
+# Explicitly allow POST for all paths
+<LimitExcept GET POST PUT DELETE PATCH OPTIONS HEAD>
+    Require all denied
+</LimitExcept>

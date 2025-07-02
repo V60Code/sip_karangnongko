@@ -9,7 +9,7 @@ use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use App\Filament\Pages\Dashboard;       // Pastikan path ke Dashboard Anda benar dan di-import
 use App\Filament\Pages\LaporanGlobalPage;
 use Filament\Panel;
-use Filament\PanelProvider;
+// use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets; // Import Widgets jika Anda menggunakannya
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -19,7 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class AdminPanelProvider extends PanelProvider
+class AdminPanelProvider extends \Filament\PanelProvider
 {
     public function panel(Panel $panel): Panel
     {

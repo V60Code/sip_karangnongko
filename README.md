@@ -146,7 +146,7 @@ Proyek ini dilisensikan di bawah **Lisensi MIT**. Lihat file `LICENSE.md` untuk 
 
 ## Kontak
 
-Nama Anda / Nama Tim / Organisasi - [alamat.email@contoh.com](mailto:alamat.email@contoh.com)
+Nama Anda / Nama Tim / Organisasi - [alamat.email@contoh.com](mailto:m.alfarizihabibullah@gmail.com)
 
 Link Proyek: [https://github.com/V60Code/sip_karangnongko](https://github.com/V60Code/sip_karangnongko)
 

@@ -1,6 +1,6 @@
 # Sistem Informasi Karangnongko (SIP Karangnongko)
 
-[![Lisensi](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/V60Code/sip_karangnongko/blob/main/LICENSE.md)
+[![Lisensi](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/V60Code/sip_karangnongko/blob/main/LICENSE)
 **SIP Karangnongko** adalah sebuah sistem informasi berbasis web yang dirancang untuk [jelaskan tujuan utama proyek Anda di sini, misalnya: "mempermudah pengelolaan data administrasi dan pelayanan publik di Desa Karangnongko"]. Proyek ini bertujuan untuk [jelaskan manfaat atau solusi yang ditawarkan].
 
 ## Daftar Isi

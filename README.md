@@ -371,7 +371,7 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE). Lihat file LICENSE untu
 ## 👥 Tim Pengembang
 
 **Tim KKN Karangnongko**
-- Email: [karangnongko.dev@gmail.com](mailto:karangnongko.dev@gmail.com)
+- Email: [m.alfarizihabibullah@gmail.com](mailto:m.alfarizihabibullah@gmail.com)
 - Repository: [https://github.com/V60Code/sip_karangnongko](https://github.com/V60Code/sip_karangnongko)
 
 ## 🙏 Acknowledgments
@@ -380,7 +380,3 @@ Proyek ini dilisensikan di bawah [MIT License](LICENSE). Lihat file LICENSE untu
 - [Filament](https://filamentphp.com) - Admin panel framework
 - [Tailwind CSS](https://tailwindcss.com) - CSS framework
 - Desa Karangnongko - Lokasi implementasi sistem
-
----
-
-**Dibuat dengan ❤️ untuk digitalisasi peternakan Indonesia**
